@@ -1,0 +1,6 @@
+jq -c 'select(
+  (.objectRef.resource == "secrets" and .verb == "list") or
+  (.verb == "create" and .objectRef.subresource == "exec") or
+  (.objectRef.resource == "pods" and .responseObject?.spec?.containers[]?.securityContext?.privileged == true) or
+  (tojson | test("audit-policy"; "i"))
+)' audit.log > audit-extract.json
